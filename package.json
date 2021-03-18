@@ -1,0 +1,24 @@
+{
+  "name": "hpuapi2",
+  "version": "2.0.0",
+  "description": "hpu 教务、图书馆系统Api",
+  "main": "index.js",
+  "author": "Hyun",
+  "license": "MIT",
+  "private": false,
+  "types": "./interface.d.ts",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "axios-cookiejar-support": "^1.0.1",
+    "cheerio": "^1.0.0-rc.5",
+    "cheerio-tableparser": "^1.0.1",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.0.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "tough-cookie": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  }
+}
