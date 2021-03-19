@@ -16,7 +16,13 @@
     "crypto-js": "^4.0.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
+    "opencv4nodejs-prebuilt": "^5.3.0-3",
     "tough-cookie": "^4.0.0"
+  },
+  "scripts": {
+      "serve": "node sls",
+      "libtest": "node test-lib",
+      "edutest": "node test"
   },
   "devDependencies": {
     "typescript": "^4.2.3"
