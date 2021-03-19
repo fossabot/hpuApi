@@ -1,4 +1,4 @@
-const {uia_login, uia_captcha} = require('./index');
+const {uia_login, uia_captcha} = require('../index');
 const fs = require('fs');
 const readline = require('readline');
 const readlineInterface = readline.createInterface({

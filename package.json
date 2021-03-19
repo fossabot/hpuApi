@@ -21,8 +21,9 @@
   },
   "scripts": {
       "serve": "node sls",
-      "libtest": "node test-lib",
-      "edutest": "node test"
+      "libtest": "node test/lib",
+      "uiatest": "node test/uia",
+      "edutest": "node test/edu"
   },
   "devDependencies": {
     "typescript": "^4.2.3"

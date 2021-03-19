@@ -1,4 +1,4 @@
-const {lib_captcha, lib_login} = require('./index');
+const {lib_captcha, lib_login} = require('../index');
 const fs = require('fs');
 const readline = require('readline');
 const readlineInterface = readline.createInterface({

@@ -1,4 +1,4 @@
-const {edu_captcha, edu_login, edu_get_info, edu_get_score} = require('./index');
+const {edu_captcha, edu_login, edu_get_info, edu_get_score} = require('../index');
 const fs = require('fs');
 const readline = require('readline');
 const readlineInterface = readline.createInterface({
