@@ -7,10 +7,11 @@
 > 目前有两种工作模式，你可以选择程序调用亦或是搭建API Service
 
 ### 程序调用
-请参考```test```文件夹内的调用示例
-图书馆示例：```npm run libtest```
-教务示例：```npm run edutest```
-UIA登录示例：```npm run uiatest```
+> 请参考```test```文件夹内的调用示例
+
+图书馆示例：```npm run libtest```  
+教务示例：```npm run edutest```  
+UIA登录示例：```npm run uiatest```  
 
 ### API Service
 > 建议使用云函数搭建(自动更换 IP, 可以有效避免请求量过大导致封禁 IP)
@@ -20,8 +21,8 @@ UIA登录示例：```npm run uiatest```
 ## 接口简介
 
 ### UIA统一登录
-支持登录验证码识别，captcha接口将同时返回验证码图片与识别结果，使用opencv模版匹配，准确率几乎能达到100%
-登录接口返回ticket，可用于登录任意接入统一登录的服务
+支持登录验证码识别，captcha接口将同时返回验证码图片与识别结果，使用opencv模版匹配，准确率几乎能达到100%  
+登录接口返回ticket，可用于登录任意接入统一登录的服务  
 
 ### 图书馆
 
