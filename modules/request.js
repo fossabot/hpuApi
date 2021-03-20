@@ -45,7 +45,7 @@ function uia_request(axios_setting) {
     });
 }
 
-function lib_request(axios_setting) {
+function lib_request(axios_setting, token) {
     if('uri' in axios_setting) {
         axios_setting['url'] = CONFIG.lib.url + axios_setting['uri'];
         delete axios_setting['uri'];
@@ -53,6 +53,8 @@ function lib_request(axios_setting) {
     if(axios_setting.headers == undefined) axios_setting['headers'] = {};
     Object.assign(axios_setting.headers, CONFIG.lib.headers);
 
+    if(token) axios_setting['headers']['token'] = token;
+    
     return axios({
         maxRedirects: 0,
         ...axios_setting

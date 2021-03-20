@@ -9,7 +9,7 @@ const CONFIGS = {
     'lib': { // 利昂图书馆系统
         'url': 'http://seatlib.hpu.edu.cn',
         'headers': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36'
+            'User-Agent': 'doSingle/11 CFNetwork/811.5.4 Darwin/16.6.0',
         }
     },
     'uia': { // UIA统一身份认证

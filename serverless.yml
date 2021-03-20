@@ -6,6 +6,8 @@ inputs:
     src: ./
     exclude:
       - .env
+      - test/**
+      - temp.jpg
   region: ap-beijing
   runtime: Nodejs10.15
   apigatewayConf:

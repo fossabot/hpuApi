@@ -1,4 +1,4 @@
-const {edu_captcha, edu_login, edu_get_info, edu_get_score} = require('../index');
+const {edu_captcha, edu_login, edu_info, edu_score} = require('../index');
 const fs = require('fs');
 const readline = require('readline');
 const readlineInterface = readline.createInterface({
@@ -40,11 +40,11 @@ function ask(questionText) {
   }
 
   console.log('token', token);
-  ret = await edu_get_info({token: token});
+  ret = await edu_info({token: token});
   console.log(ret);
   if(ret.body.code!=0) process.exit(0);
 
-  ret = await edu_get_score({token: token, body: { semester_id: 62 }});
+  ret = await edu_score({token: token, body: { semester_id: 62 }});
   console.log(ret);
   if(ret.body.code!=0) process.exit(0);
 
