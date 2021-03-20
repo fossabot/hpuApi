@@ -16,7 +16,7 @@ function ask(questionText) {
 (async function(){
     let ret, token;
     
-    ret = await lib_login({body: {username: '312003***REMOVED***', password: '***REMOVED***'}});
+    ret = await lib_login({body: {username: '学号', password: '统一认证密码'}});
     console.log(ret);
 
     token = ret.body.token;

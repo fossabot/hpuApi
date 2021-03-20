@@ -32,7 +32,7 @@ function ask(questionText) {
     token = ret.body.token;
     let captcha = await ask("请输入验证码: ");
     
-    ret = await edu_login({token: token, key: ret.body.key, body: {captcha: captcha, username: '312003***REMOVED***', password: '120038'}});
+    ret = await edu_login({token: token, key: ret.body.key, body: {captcha: captcha, username: '学号', password: '教务密码'}});
     console.log(ret);
     if(ret.body.code!=0) continue;
     
