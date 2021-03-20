@@ -14,6 +14,7 @@ function ask(questionText) {
 
 (async function(){
     let ret = await uia_captcha();
+    console.log(ret.body);
     fs.writeFileSync('./temp.jpg', Buffer.from(ret.body.img, 'base64'));
     let captcha = await ask("请输入验证码: ");
 

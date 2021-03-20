@@ -8,6 +8,10 @@ inputs:
       - .env
       - test/**
       - temp.jpg
+      - node_modules/**
+  layers:
+    - name: ${output:${stage}:${app}:${name}-layer.name}
+      version: ${output:${stage}:${app}:${name}-layer.version}
   region: ap-beijing
   runtime: Nodejs10.15
   apigatewayConf:
