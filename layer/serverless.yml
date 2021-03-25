@@ -1,0 +1,13 @@
+org: orgDemo
+app: hpuApi_sls
+stage: dev
+component: layer
+name: expressDemo-layer
+
+inputs:
+  region: ap-beijing
+  name: ${name}
+  src: ../node_modules
+  runtimes:
+    - Nodejs10.15
+    - Nodejs12.16
