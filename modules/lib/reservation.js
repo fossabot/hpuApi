@@ -13,7 +13,7 @@ module.exports = async function(req) {
     
     if(ret.data.status==='success') {
         if(!ret.data.data) return { body: { code: -1004, msg: '你还没有任何预约' }};
-        else return { body: { code: 0, ...ret.data.data }};
+        else return { body: { code: 0, reservations: ret.data.data }};
     }
 
     return { body: { code: -1002, msg: ret.data.message }};

@@ -39,8 +39,9 @@ function uia_request(axios_setting) {
     if(axios_setting.headers == undefined) axios_setting['headers'] = {};
     Object.assign(axios_setting.headers, CONFIG.uia.headers);
 
+    if(!axios_setting['maxRedirects']) axios_setting['maxRedirects'] = 0;
+    
     return axios({
-        maxRedirects: 0,
         ...axios_setting
     });
 }

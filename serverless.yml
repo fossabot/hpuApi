@@ -1,4 +1,6 @@
+org: orgDemo
 app: hpuApi_sls
+stage: dev
 component: express
 name: expressDemo
 inputs:
@@ -13,7 +15,7 @@ inputs:
     - name: ${output:${stage}:${app}:${name}-layer.name}
       version: ${output:${stage}:${app}:${name}-layer.version}
   region: ap-beijing
-  runtime: Nodejs10.15
+  runtime: Nodejs12.16
   apigatewayConf:
     protocols:
       - https
