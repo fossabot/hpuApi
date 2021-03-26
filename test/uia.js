@@ -18,7 +18,7 @@ function ask(questionText) {
     fs.writeFileSync('./temp.jpg', Buffer.from(ret.body.img, 'base64'));
     let captcha = await ask("请输入验证码: ");
 
-    ret = await uia_login({body: {username: '312003***REMOVED***', password: '***REMOVED***', captcha_token: ret.body.token, captcha: captcha}});
+    ret = await uia_login({body: {username: '***REMOVED***', password: '***REMOVED***', captcha_token: ret.body.token, captcha: captcha}});
     console.log(ret);
 
     await ask('GET TICKET');

@@ -34,7 +34,7 @@ travel(path.join(__dirname, 'modules'), function(pathname){
     let result;
 
     try {
-      result = await require(pathname)({body: req.body, ...req.headers});
+      result = await require(pathname)({query: req.query, body: req.body, ...req.headers});
     } catch (error) {
       next(error);
       return;

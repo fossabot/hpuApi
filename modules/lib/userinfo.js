@@ -19,7 +19,7 @@ module.exports = async function(req) {
   id: 44507,
   enabled: true,
   name: '***REMOVED***',
-  username: '312003***REMOVED***',
+  username: '***REMOVED***',
   username2: null,
   status: 'NORMAL',
   lastLogin: '2020-10-10T09:25:46.000',
