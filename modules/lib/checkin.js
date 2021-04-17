@@ -10,6 +10,6 @@ module.exports = async function(req) {
         uri: '/rest/v2/checkIn',
     }, req['token']);
 
-    if(ret.data.status==='success') return { body: { code: 0, token: ret.data.data.token }}
+    if(ret.data.status==='success') return { body: { code: 0, ...ret.data.data }}
     return { body: { code: -1002, msg: ret.data.message }}
 }
