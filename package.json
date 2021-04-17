@@ -24,7 +24,8 @@
     "libtest": "node test/lib",
     "uiatest": "node test/uia",
     "edutest": "node test/edu",
-    "toolstest": "node test/tools"
+    "toolstest": "node test/tools",
+    "ybktest": "node test/ybk"
   },
   "devDependencies": {
     "typescript": "^4.2.3"

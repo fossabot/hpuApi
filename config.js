@@ -18,6 +18,17 @@ const CONFIGS = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36'
         }
     },
+    'ybk': { // 云班课
+        'url': 'https://api.mosoteach.cn/mssvc/index.php',
+        'headers': {
+            'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 10.0.0; MI 9 Build/NMF26X)',
+            'X-app-id': 'MTANDROID',
+            'X-app-version': '5.3.2',
+            'X-dpr': '2.0',
+            'X-app-machine': 'MI 10',
+            'X-app-system-version': '10.0.0'
+        }
+    },
 }
 
 module.exports = CONFIGS;

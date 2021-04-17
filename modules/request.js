@@ -1,6 +1,7 @@
 const axios = require('axios');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const CONFIG = require('../config')
+const generateSig = require('../utils/ybk_signature')
 
 axiosCookieJarSupport(axios);
 
@@ -62,4 +63,28 @@ function lib_request(axios_setting, token) {
     });
 }
 
-module.exports = { edu_request, uia_request, lib_request }
+// token = {
+//     uid: '********-****-****-****-************',
+//     secretID: 'ugmwM***********',
+//     secret: 'gB5N-Qz1********',
+//     lastTime: 1614******
+// }
+
+function ybk_request(axios_setting, token) {
+    if('uri' in axios_setting) {
+        axios_setting['url'] = CONFIG.ybk.url + axios_setting['uri'];
+        delete axios_setting['uri'];
+    }
+    if(axios_setting.headers == undefined) axios_setting['headers'] = {};
+    if(axios_setting.method == undefined) axios_setting['method'] = 'POST';
+    Object.assign(axios_setting.headers, CONFIG.ybk.headers);
+    
+    axios_setting['headers']['X-mssvc-signature'] = generateSig(token, axios_setting);
+    
+    return axios({
+        maxRedirects: 0,
+        ...axios_setting
+    });
+}
+
+module.exports = { edu_request, uia_request, lib_request, ybk_request }

@@ -9,7 +9,7 @@ module.exports = async function(req) {
 
     let now_url;
     let cookieJar = new tough.CookieJar();
-    // cookieJar.setCookieSync(`CASTGC=${req.token}`, `${CONFIG.uia.url}/cas`);
+    cookieJar.setCookieSync(`CASTGC=${req.token}`, `${CONFIG.uia.url}/cas`);
     while (true) {
         try {
             let config;
