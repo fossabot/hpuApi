@@ -3,11 +3,18 @@
 
 **本项目仅供学习交流使用**
 
+## 安装使用
+```
+$ git clone git@github.com:hyunsssssssss/hpuApi.git
+$ cd hpuApi && npm run serve
+```
+
 ## 工作模式
 > 有两种工作模式，你可以选择程序调用或者搭建API Service
 
 ### 程序调用
-> 请参考```test```文件夹内的调用示例
+> 请参考```test```文件夹内的调用示例  
+> 更多示例: [Wiki - Usage](../../wiki/Usage)
 
 - 图书馆示例：```npm run libtest```
 - 教务示例：```npm run edutest```
@@ -38,8 +45,8 @@ ticket接口返回的ticket，可用于登录任意接入统一登录的服务
 ### 小工具
 服务于日常学习与生活的一些小工具API。随缘更新, 无接口介绍, 请自行查看源码
 
-## API文档 
-请到 [wiki](../../wiki) 查看
+## 接口文档 
+请到 [Wiki - APIs](../../wiki/apis) 查看
 
 ## 已知问题
 - [ ] 教务系统偶尔出现验证码错误
@@ -47,4 +54,5 @@ ticket接口返回的ticket，可用于登录任意接入统一登录的服务
 
 ## 计划添加
 - [ ] Typescript types
+- [ ] WIP - 完善API文档
 - [ ] 云函数搭建 API 教程
