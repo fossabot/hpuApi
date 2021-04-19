@@ -105,3 +105,4 @@ dist
 .tern-port
 
 temp.jpg
+test/secret.js

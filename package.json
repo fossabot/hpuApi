@@ -1,5 +1,5 @@
 {
-  "name": "hpuapi2",
+  "name": "hpuapi",
   "version": "2.0.0",
   "description": "hpu 教务、图书馆系统Api",
   "main": "index.js",
