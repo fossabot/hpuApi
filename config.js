@@ -20,13 +20,12 @@ const CONFIGS = {
     },
     'ybk': { // 云班课
         'url': 'https://api.mosoteach.cn/mssvc/index.php',
+        'core_url': 'https://coreapi.mosoteach.cn',
         'headers': {
             'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 10.0.0; MI 9 Build/NMF26X)',
-            'X-app-id': 'MTANDROID',
-            'X-app-version': '5.3.2',
-            'X-dpr': '2.0',
             'X-app-machine': 'MI 10',
-            'X-app-system-version': '10.0.0'
+            'X-app-system-version': '10.0.0',
+            'Accept-Language': 'zh-CN'
         }
     },
 }

@@ -20,13 +20,14 @@ function ask(questionText) {
 
     ret = await uia_login({body: {username: '***REMOVED***', password: '***REMOVED***', captcha_token: ret.body.token, captcha: captcha}});
     console.log(ret);
+    let token = ret.body['token'];
 
     await ask('GET TICKET');
-    ret = await uia_ticket({token: ret.body['token'], body: {service: 'http://seatlib.hpu.edu.cn/cas'}});
+    ret = await uia_ticket({token: token, body: {service: 'http://seatlib.hpu.edu.cn/cas'}});
     console.log(ret);
     
     await ask('GET INFO');
-    ret = await uia_info({token: ret.body['token']});
+    ret = await uia_info({token: token});
     console.log(ret);
 
     await ask('任意键关闭');

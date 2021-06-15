@@ -10,6 +10,7 @@ module.exports = async function(req) {
         data: {'clazz_course_id': req['body']['classid']}
     }, req['token']);
 
+    if(ret.data.result_code===1001) return { body: { code: -1006, msg: ret.data.result_msg }};
     if(ret.data.result_code!==0) return { body: { code: -1002, msg: ret.data.result_msg }};
 
     let check_info = {id: ret.data.data.id, checkin_type: ret.data.data.checkin_type, open_time: ret.data.data.open_time};

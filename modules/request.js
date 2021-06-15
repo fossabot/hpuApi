@@ -71,16 +71,17 @@ function lib_request(axios_setting, token) {
 // }
 
 function ybk_request(axios_setting, token) {
-    if('uri' in axios_setting) {
-        axios_setting['url'] = CONFIG.ybk.url + axios_setting['uri'];
-        delete axios_setting['uri'];
-    }
+    if('uri' in axios_setting) axios_setting['url'] = (axios_setting['core_api']? CONFIG.ybk.core_url : CONFIG.ybk.url) + axios_setting['uri'];
     if(axios_setting.headers == undefined) axios_setting['headers'] = {};
     if(axios_setting.method == undefined) axios_setting['method'] = 'POST';
     Object.assign(axios_setting.headers, CONFIG.ybk.headers);
     
-    axios_setting['headers']['X-mssvc-signature'] = generateSig(token, axios_setting);
-    
+    if(axios_setting['core_api']) axios_setting['headers']['X-signature'] = generateSig(token, axios_setting, true);
+    else axios_setting['headers']['X-mssvc-signature'] = generateSig(token, axios_setting);
+
+    delete axios_setting['uri'];
+    delete axios_setting['core_api'];
+    console.log(axios_setting);
     return axios({
         maxRedirects: 0,
         ...axios_setting
