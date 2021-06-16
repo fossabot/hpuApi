@@ -5,7 +5,7 @@
 
 ## 安装使用
 ```
-$ git clone git@github.com:hyunsssssssss/hpuApi.git
+$ git clone https://github.com/hyunsssssssss/hpuApi.git
 $ cd hpuApi && npm run serve
 ```
 
@@ -40,7 +40,7 @@ ticket接口返回的ticket，可用于登录任意接入统一登录的服务
 解析树维教务系统返回的html并将结果以json方式返回, 目前已实现登录、分数查询、信息查询（部分）、课表查询
 
 ### 云班课
-模拟安卓客户端请求，并对请求进行签名, 目前已支持对所有签到类型的自动签到
+模拟安卓客户端请求，并对请求进行签名, 目前已支持对所有签到类型的自动签到、班课查询、信息查询
 
 ### 小工具
 服务于日常学习与生活的一些小工具API。随缘更新, 无接口介绍, 请自行查看源码
