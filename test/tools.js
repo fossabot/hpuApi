@@ -1,4 +1,4 @@
-const {tools_daxuexi, tools_movie} = require('../index');
+const {tools_daxuexi, tools_movie, tools_redirect} = require('../index');
 const fs = require('fs');
 const readline = require('readline');
 const readlineInterface = readline.createInterface({
@@ -20,6 +20,9 @@ function ask(questionText) {
     // })
 
     let ret = await tools_movie({query: {name:'熊出没'}});
+    console.log(ret);
+
+    ret = await tools_redirect({query: {url:'http://adkx.net/259r8'}});
     console.log(ret);
 
     process.exit(0);
