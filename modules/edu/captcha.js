@@ -11,11 +11,17 @@ const char_set = '0123456789';
 async function recoCaptcha(img) {
     // if(!img) img = (await require('axios').get('http://192.168.136.1/captcha.php', {responseType: 'arraybuffer'})).data;
     
-    let relative = "tf-model/edu-captcha/model.json";
-    console.log('Model path:', relative, ', img:', img);
-    if(!fs.existsSync(relative)) relative = path.join('/opt', relative); // 云函数分层
-    const handler = tf.io.fileSystem(relative);
-    const model = await tf.loadGraphModel(handler);
+    let model;
+    const g = require('../../utils/global_cache');
+    if(g && g.tf_edu_model) model = g.tf_edu_model;
+    else {
+        console.warn('Unable to use cached model!');
+        let relative = "tf-model/edu-captcha/model.json";
+        console.log('Model path:', relative, ', img:', img);
+        if(!fs.existsSync(relative)) relative = path.join('/opt', relative); // 云函数分层
+        const handler = tf.io.fileSystem(relative);
+        model = await tf.loadGraphModel(handler);
+    }
 
     const mat = cv.imdecode(img, cv.IMREAD_COLOR).cvtColor(cv.COLOR_BGR2GRAY);
 

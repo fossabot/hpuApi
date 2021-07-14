@@ -20,6 +20,7 @@ Resources:
       Type: 'Aliyun::Serverless::Function'
       Properties:
         Handler: alifun.handler
+        Initializer: alifun.initializer
         Runtime: nodejs12
         CodeUri: ./
         MemorySize: 1024
