@@ -13,9 +13,12 @@ function edu_request(axios_setting, session_id) {
     if(axios_setting.headers == undefined) axios_setting['headers'] = {};
     Object.assign(axios_setting.headers, CONFIG.edu.headers);
 
-    const auth_cookie = `JSESSIONID=${session_id}; GSESSIONID=${session_id}; SVRNAME=xk1`;
-    if(axios_setting.headers['Cookie'] != undefined && session_id) axios_setting.headers['Cookie'] += '; ' + auth_cookie;
-    else if(session_id) axios_setting.headers['Cookie'] = auth_cookie;
+    let add_cookie = 'SVRNAME=xk1; huaucookie=1999999999'
+    const auth_cookie = `JSESSIONID=${session_id}; GSESSIONID=${session_id}`;
+    if(session_id) add_cookie += '; ' + auth_cookie;
+
+    if(axios_setting.headers['Cookie'] == undefined) axios_setting.headers['Cookie'] = add_cookie;
+    else axios_setting.headers['Cookie'] = `${axios_setting.headers['Cookie']}; ${add_cookie}`;
 
     for (const header of Object.keys(axios_setting['headers'])) {
         axios_setting['headers'][header] = axios_setting['headers'][header].replace(/\$host\$/g, CONFIG.edu.url);
@@ -81,7 +84,7 @@ function ybk_request(axios_setting, token) {
 
     delete axios_setting['uri'];
     delete axios_setting['core_api'];
-    console.log(axios_setting);
+
     return axios({
         maxRedirects: 0,
         ...axios_setting

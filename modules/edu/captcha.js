@@ -1,5 +1,28 @@
 const {edu_request} = require('../request')
 const CONFIG = require('../../config')
+const cv = require('opencv4nodejs-prebuilt')
+const tf = require('@tensorflow/tfjs-node')
+const fs = require('fs')
+const path = require('path')
+
+const captcha_len = 4;
+const char_set = '0123456789';
+
+async function recoCaptcha(img) {
+    // if(!img) img = (await require('axios').get('http://192.168.136.1/captcha.php', {responseType: 'arraybuffer'})).data;
+    
+    let relative = "tf-model/edu-captcha/model.json";
+    console.log('Model path:', relative, ', img:', img);
+    if(!fs.existsSync(relative)) relative = path.join('/opt', relative); // 云函数分层
+    const handler = tf.io.fileSystem(relative);
+    const model = await tf.loadGraphModel(handler);
+
+    const mat = cv.imdecode(img, cv.IMREAD_COLOR).cvtColor(cv.COLOR_BGR2GRAY);
+
+    const tensor_img = tf.tensor(new Uint8Array(mat.getData()), [1, 90*35], 'float32').div(255);
+    const chars = model.predict([tensor_img, tf.scalar(1, 'float32')]).reshape([-1, captcha_len, char_set.length]);
+    return tf.argMax(chars, 2).dataSync().join('');
+}
 
 // req.token?
 module.exports = async function(req) {
@@ -38,7 +61,8 @@ module.exports = async function(req) {
             code: 0,
             img: ret.data.toString('base64'),
             token: token[1],
-            key: `${aesKey[1]}|${shaKey[1]}`
+            key: `${aesKey[1]}|${shaKey[1]}`,
+            captcha: await recoCaptcha(ret.data)
         }
     }
 }

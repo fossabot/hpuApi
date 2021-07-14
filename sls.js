@@ -63,7 +63,7 @@ app.use(function(err, req, res) {
   res.send({code: -1002, msg: ret_err});
 });
 
-const port = process.env.PORT || 3330
+const port = process.env.PORT || 9000
 app.set('port', port);
 app.listen(port, ()=>{console.log('Listening on ' + port);});
 

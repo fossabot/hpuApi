@@ -11,6 +11,7 @@ inputs:
       - test/**
       - temp.jpg
       - node_modules/**
+      - tf-model/**
   layers:
     - name: ${output:${stage}:${app}:${name}-layer.name}
       version: ${output:${stage}:${app}:${name}-layer.version}

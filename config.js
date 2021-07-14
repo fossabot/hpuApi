@@ -1,9 +1,9 @@
 const CONFIGS = {
     'edu': { // 树维教务系统
-        'url': 'http://218.196.248.100/eams',
+        'url': 'http://zhjw.hpu.edu.cn/eams',
         'headers': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36',
-            'Origin': 'http://218.196.248.100'
+            'Origin': 'http://zhjw.hpu.edu.cn'
         }
     },
     'lib': { // 利昂图书馆系统

@@ -1,0 +1,48 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Resources:
+  hpuApi:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: This is FC service
+      VpcConfig:
+          VpcId: 'vpc-bp1sw88lm3jgbpgyhd23m'
+          VSwitchIds: [ 'vsw-bp1rkf39bws0u32360ot7' ]
+          SecurityGroupId: 'sg-bp1g8lolpme8zi8e8f5u'
+      NasConfig:
+        UserId: 10003
+        GroupId: 10003
+        MountPoints:
+          - ServerAddr: '0e29148bc7-ala52.cn-hangzhou.nas.aliyuncs.com:/'
+            MountDir: '/mnt/auto'
+      LogConfig: Auto
+    hpuApi:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: alifun.handler
+        Runtime: nodejs12
+        CodeUri: ./
+        MemorySize: 1024
+        InstanceConcurrency: 5
+        Timeout: 120
+        EnvironmentVariables:
+          NODE_PATH: '/mnt/auto/node_modules:/usr/local/lib/node_modules'
+      Events:
+        httpTrigger:
+          Type: HTTP
+          Properties:
+            AuthType: ANONYMOUS
+            Methods:
+              - GET
+              - POST
+              - PUT
+  Domain:
+    Type: 'Aliyun::Serverless::CustomDomain'
+    Properties:
+      DomainName: Auto
+      Protocol: HTTP
+      RouteConfig:
+        Routes:
+          /*:
+            ServiceName: hpuApi
+            FunctionName: hpuApi
