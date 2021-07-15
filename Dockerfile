@@ -9,8 +9,7 @@ ENV NODE_ENV=production \
 
 COPY . .
 
-RUN sed -i "s@http://deb.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list
-
+RUN sed -i "s@http://deb.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list && sed -i "s@http://security.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list
 # Install common libraries
 RUN apt-get update && apt-get --no-install-recommends install -y \
     cmake \
