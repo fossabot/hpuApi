@@ -1,4 +1,6 @@
 const CONFIGS = {
+    // 预加载模型, 会占用大量内存但可大大缩短模型加载时间
+    'preload': false,
     'edu': { // 树维教务系统
         'url': 'http://zhjw.hpu.edu.cn/eams',
         'headers': {

@@ -1,8 +1,8 @@
-org: orgDemo
-app: hpuApi_sls
+org: hpuApi
+app: hpuApi
 stage: dev
-component: express
-name: expressDemo
+component: scf
+name: main
 inputs:
   src:
     src: ./
@@ -12,19 +12,12 @@ inputs:
       - temp.jpg
       - node_modules/**
       - tf-model/**
-  layers:
-    - name: ${output:${stage}:${app}:${name}-layer.name}
-      version: ${output:${stage}:${app}:${name}-layer.version}
-  region: ap-beijing
+  handler: tencent_sls.handler
+  region: ap-guangzhou
   runtime: Nodejs12.16
-  apigatewayConf:
-    protocols:
-      - https
-    environment: release
-  functionConf:
-    eip: false
-    timeout: 8
-    memorySize: 128
-    environment:
-      variables:
-        NODE_ENV: production
+  eip: false
+  timeout: 10
+  memorySize: 1024
+  environment:
+    variables:
+      NODE_ENV: production

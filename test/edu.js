@@ -14,10 +14,10 @@ function ask(questionText) {
 }
 
 (async function(){
-  let token = 'AB739CA734D8EEA9CF9AF00F4872047A';
+  let token = 'C5A446375ED54B54623AA2EDD7C62382';
 
   while (true) {
-    let ret = await edu_captcha({token: token});
+    let ret = await edu_captcha({token: token, query:{r:'true'}});
     if(ret.body.code==-2000) {
       console.log('已登录');
       break;

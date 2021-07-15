@@ -25,7 +25,8 @@ Resources:
         CodeUri: ./
         MemorySize: 1024
         InstanceConcurrency: 5
-        Timeout: 120
+        Timeout: 60
+        InitializationTimeout: 60
         EnvironmentVariables:
           NODE_PATH: '/mnt/auto/node_modules:/usr/local/lib/node_modules'
       Events:

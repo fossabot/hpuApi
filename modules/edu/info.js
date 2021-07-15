@@ -21,27 +21,41 @@ module.exports = async function(req) {
     }, req.token);
 
     const $ = cheerio.load(ret.data);
-    
-    let semester_reg = /(\d\d\d\d)-(\d\d\d\d) +第 *(\d+) *学期.*第 *(\d+) *教学/.exec($('.calendar-box .title').text());
+
+    let semester_reg = /(\d\d\d\d)-(\d\d\d\d) +第 *(\d+) *学期.*第 *([-\d]+) *教学/.exec($('.calendar-box .title').text());
     let semester_now_id = /viewSemesterInfo\((\d+)\);/.exec(ret.data);
 
     if(!semester_now_id || !semester_reg || !semester_reg[1] || !semester_reg[2] || !semester_reg[3] || !semester_reg[4]) return { body: { code: -1002, msg: '未知错误, 服务器返回异常' }};
     semester_now_id = parseInt(semester_now_id[1]);
-    const week = parseInt(semester_reg[4]);
-    
-    let now = new Date(), now_day = now.getDay(), now_ts = new Date(now.getFullYear(),now.getMonth(), now.getDate(), 0, 0, 0).getTime()/1000;
-    let semester_start = now_ts;
-    if(now_day===0) now_day=7;
-    semester_start-=(now_day-1)*86400;
-    semester_start-=(week-1)*604800;
-    
+
     let semesters = [];
-    if(semester_reg[3]===1) {
-        semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 第一学期`, id: semester_now_id});
+    let semester_start, week;
+    if(semester_reg[4]!='--') {
+        const week = parseInt(semester_reg[4]);
+    
+        let now = new Date(), now_day = now.getDay(), now_ts = new Date(now.getFullYear(),now.getMonth(), now.getDate(), 0, 0, 0).getTime()/1000;
+        semester_start = now_ts;
+        if(now_day===0) now_day=7;
+        semester_start-=(now_day-1)*86400;
+        semester_start-=(week-1)*604800;
+        
+        if(semester_reg[3]===1) {
+            semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 第一学期`, id: semester_now_id});
+        } else {
+            semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 第一学期`, id: semester_now_id - 1});
+            if(!req.body || req.body.type !== 'score')
+                semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 第二学期`, id: semester_now_id});
+        }
     } else {
-        semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 第一学期`, id: semester_now_id - 1});
-        if(!req.body || req.body.type !== 'score')
-            semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 第二学期`, id: semester_now_id});
+        if(semester_reg[3]===1) { // 暑假
+            semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 第二学期`, id: semester_now_id - 1});
+            if(!req.body || req.body.type !== 'score')
+                semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 新学期`, id: semester_now_id});
+        } else { // 寒假
+            semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 第一学期`, id: semester_now_id - 1});
+            if(!req.body || req.body.type !== 'score')
+                semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 第二学期`, id: semester_now_id});
+        }
     }
 
     return {

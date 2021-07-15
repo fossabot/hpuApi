@@ -14,7 +14,7 @@ function travel(dir,callback){
 
 let obj = {}
 travel(path.join(__dirname, 'modules'), function(pathname){
-    let ret = /modules\\([a-z]*)\\([a-z_]*)\.js$/.exec(pathname);
+    let ret = /modules[\\/]([a-z]*)[\\/]([a-z_]*)\.js$/.exec(pathname);
     if(!ret || ret.length!==3) return;
     console.log('Loaded:',ret[1], ret[2]);
     obj[`${ret[1]}_${ret[2]}`] = require(pathname);

@@ -21,6 +21,7 @@ async function recoCaptcha(img) {
         if(!fs.existsSync(relative)) relative = path.join('/opt', relative); // 云函数分层
         const handler = tf.io.fileSystem(relative);
         model = await tf.loadGraphModel(handler);
+        if(g) g.tf_edu_model = model;
     }
 
     const mat = cv.imdecode(img, cv.IMREAD_COLOR).cvtColor(cv.COLOR_BGR2GRAY);
@@ -62,13 +63,15 @@ module.exports = async function(req) {
         }
     }, token[1]);
     
-    return {
+    let resp = {
         body: {
             code: 0,
             img: ret.data.toString('base64'),
             token: token[1],
-            key: `${aesKey[1]}|${shaKey[1]}`,
-            captcha: await recoCaptcha(ret.data)
+            key: `${aesKey[1]}|${shaKey[1]}`
         }
-    }
+    };
+
+    if(req.query && req.query.r == 'true') resp.body.captcha = await recoCaptcha(ret.data);
+    return resp;
 }

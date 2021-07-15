@@ -22,7 +22,7 @@
     "tough-cookie": "^4.0.0"
   },
   "scripts": {
-    "serve": "node sls",
+    "serve": "node serve",
     "libtest": "node test/lib",
     "uiatest": "node test/uia",
     "edutest": "node test/edu",
