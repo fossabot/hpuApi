@@ -13,19 +13,19 @@ $ cd hpuApi && npm run serve
 > 有两种工作模式，你可以选择程序调用或者搭建API Service
 
 ### 程序调用
-> 请参考```test```文件夹内的调用示例  
+> 请参考`test`文件夹内的调用示例  
 > 更多示例: [Wiki - Usage](../../wiki/Usage)
 
-- 图书馆示例：```npm run libtest```
-- 教务示例：```npm run edutest```
-- UIA登录示例：```npm run uiatest```
-- 云班课示例：```npm run ybktest```
+- 图书馆示例：`npm run libtest`
+- 教务示例：`npm run edutest`
+- UIA登录示例：`npm run uiatest`
+- 云班课示例：`npm run ybktest`
 
 ### API Service
 > 这是一个**无状态服务端**，不存储任何用户信息，每次请求需同时提供对应系统的凭证  
 > 建议使用云函数搭建(自动更换 IP, 可以有效避免请求量过大导致封禁 IP)
 
-即API服务端，使用```npm run serve```即可启动，默认端口```3330```  
+即API服务端，使用`npm run serve`即可启动，默认端口`3330`  
 
 ## 接口简介
 
