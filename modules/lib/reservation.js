@@ -11,6 +11,6 @@ module.exports = async function(req) {
         uri: '/rest/v2/user/reservations',
     }, req['token']);
 
-    
+    if(!ret.data.data) ret.data.data = [];
     return { body: { code: 0, reservations: ret.data.data }};
 }
