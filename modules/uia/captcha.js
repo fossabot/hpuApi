@@ -47,7 +47,7 @@ module.exports = async function(req) {
         body: {
             code: 0,
             ...ret.data,
-            captcha: templateMatch(mat.getRegion(new cv.Rect(20,5,10,15)))+templateMatch(mat.getRegion(new cv.Rect(40,5,10,15))),
+            captcha: templateMatch(mat.getRegion(new cv.Rect(23,5,10,15)))+templateMatch(mat.getRegion(new cv.Rect(43,5,10,15))),
         }
     }
 }
