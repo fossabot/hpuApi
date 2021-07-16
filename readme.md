@@ -1,4 +1,6 @@
 # HPU公共API (HPU PublicApi)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhyunsssssssss%2FhpuApi.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhyunsssssssss%2FhpuApi?ref=badge_shield)
+
 对一些系统的非标准返回数据标准化，封装成API方便调用, 集成了UIA统一登录、树维教务系统、利昂图书馆系统、云班课和一些小工具  
 
 **本项目仅供学习交流使用**
@@ -66,3 +68,7 @@ ticket接口返回的ticket，可用于登录任意接入统一登录的服务
 
 - `2021-07-14` 1.1.0  
 添加对阿里云函数计算支持，修复教务API，增加教务验证码识别
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhyunsssssssss%2FhpuApi.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhyunsssssssss%2FhpuApi?ref=badge_large)
