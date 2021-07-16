@@ -30,6 +30,7 @@ module.exports = async function(req) {
     if($('div[align="center"]').length) throw new YunError($('div[align="center"]').text().replace(/	/g, ' ').replace(/ +/g, ' ').trim());
 
     let sum_grade_point = 0;
+    let sum_credit = 0;
     const exams = [];
     $('.grid tr').each(function(){
         const tds = $(this).find('td');
@@ -45,7 +46,8 @@ module.exports = async function(req) {
             final_score: tds.eq(8).text().trim(),
             grade_point: tds.eq(9).text().trim(),
         }
-        sum_grade_point += parseFloat(exam.grade_point);
+        sum_grade_point += parseFloat(exam.credit*exam.grade_point);
+        sum_credit += parseFloat(exam.credit);
         exams.push(exam);
         // console.log($(this).text().replace(/	/g, ' ').replace(/ +/g, ' ').replace(/\n/g, '').trim());
     });
@@ -54,8 +56,8 @@ module.exports = async function(req) {
         body: {
             code: 0,
             exams: exams,
-            sum_grade_point: sum_grade_point.toFixed(1),
-            avr_grade_point: (sum_grade_point/exams.length).toFixed(2),
+            sum_credit: sum_credit.toFixed(1),
+            avr_grade_point: (sum_grade_point/sum_credit).toFixed(2),
         },
     }
 }

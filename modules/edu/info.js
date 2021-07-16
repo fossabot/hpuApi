@@ -50,6 +50,7 @@ module.exports = async function(req) {
         }
     } else {
         if(semester_reg[3]==='1') { // 暑假
+            semesters.push({name: `${parseInt(semester_reg[1])-1}-${parseInt(semester_reg[2])-1} 第一学期`, id: semester_now_id - 2});
             semesters.push({name: `${parseInt(semester_reg[1])-1}-${parseInt(semester_reg[2])-1} 第二学期`, id: semester_now_id - 1});
             if(!req.body || req.body.type !== 'score')
                 semesters.push({name: `${semester_reg[1]}-${semester_reg[2]} 新学期`, id: semester_now_id});
