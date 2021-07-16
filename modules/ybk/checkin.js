@@ -1,17 +1,18 @@
+const { NotYetBeginError, YunError, RepeatError } = require('../../utils/error');
+const verifier = require('../../utils/verifier');
 const {ybk_request} = require('../request');
-const qs = require('qs');
 
 // req.token req.body.classid
 module.exports = async function(req) {
-    if(!req || !req['body'] || !req['body']['classid']) return { body: { code: -1003, msg: '参数不完整' }};
+    verifier(req, {t:'header', v:'token'}, {t:'body', v:'classid'});
 
     ret = await ybk_request({
         uri: '/checkin/current_open',
         data: {'clazz_course_id': req['body']['classid']}
     }, req['token']);
 
-    if(ret.data.result_code===1001) return { body: { code: -1006, msg: ret.data.result_msg }};
-    if(ret.data.result_code!==0) return { body: { code: -1002, msg: ret.data.result_msg }};
+    if(ret.data.result_code===1001) throw new NotYetBeginError(ret.data.result_msg);
+    if(ret.data.result_code!==0) throw new YunError(ret.data.result_msg);
 
     let check_info = {id: ret.data.data.id, checkin_type: ret.data.data.checkin_type, open_time: ret.data.data.open_time};
     if(ret.data.data.points && ret.data.data.points!='') check_info['points'] = ret.data.data.points;
@@ -37,7 +38,7 @@ module.exports = async function(req) {
     //     }
     //   }
 
-    if(ret.data.data.checkin_flag == 'Y') return { body: { code: -1005, msg: '你已经签过到了', ...check_info }}
+    if(ret.data.data.checkin_flag == 'Y') throw new RepeatError('你已经签过到了', check_info);
 
     try {
         if(ret.data.data.checkin_type == 'CLOCKIN') {
@@ -52,9 +53,9 @@ module.exports = async function(req) {
             }, req['token']);
         }
     } catch (err) {
-        return { body: { code: -1002, msg: err.message }};
+        throw new YunError(err.message);
     }
 
-    if(ret.data.result_code!==0) return { body: { code: -1002, msg: ret.data.result_msg }};
+    if(ret.data.result_code!==0) throw new YunError(ret.data.result_msg);
     return { body: { code: 0, ...check_info}}
 }

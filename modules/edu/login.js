@@ -1,12 +1,13 @@
-const {edu_request} = require('../request');
-const qs = require('qs');
-const {aes_encrypt, sha_encrypt} = require('../../utils/encrypt');
+const verifier = require('../../utils/verifier')
+const {edu_request} = require('../request')
+const qs = require('qs')
+const {aes_encrypt, sha_encrypt} = require('../../utils/encrypt')
+const { InvalidInputError, YunError } = require('../../utils/error')
 
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms));}
 
-// req.token req.body.username req.body.password req.body.captcha
 module.exports = async function(req) {
-    if(!req || !req['token'] || !req['body'] || !req['body']['username'] || !req['body']['password'] || !req['body']['captcha']) return { body: { code: -1003, msg: '参数不完整' }};
+    verifier(req, {t:'body', v:'username'}, {t:'body', v:'password'}, {t:'body', v:'captcha'});
 
     let ret = await edu_request({
         method: 'POST',
@@ -15,17 +16,10 @@ module.exports = async function(req) {
         data: qs.stringify({'captcha_response': parseInt(req.body.captcha)})
     }, req['token']);
 
-    if(ret.data.flag !== true) {
-        return {
-            body: {
-              code: -2001,
-              msg: '验证码错误！'
-            }
-        };
-    }
+    if(ret.data.flag !== true) throw new InvalidInputError('验证码错误！');
 
     const keys = req['key'].split('|');
-    if(keys.length < 2) return { body: { code: -1003, msg: '请提供正确的 req.key' }};
+    if(keys.length < 2) throw new InvalidInputError('请提供正确的 req.key');
     
 
     console.log('Logining...', keys[0], keys[1], aes_encrypt(req.body.username, keys[0]), sha_encrypt(req.body.password, keys[1]));
@@ -46,7 +40,8 @@ module.exports = async function(req) {
     } catch (error) {
         if(error.response.status===302) return {body: { code: 0 }};
     }
+    
     let ret_msg = (/ui-icon ui-icon-alert.*\n *<span>(.*)<\/span>/).exec(ret.data);
-    if(!ret_msg || ret_msg.length<2) return {body: { code: -1002, msg: '未知错误' }};
-    return {body: { code: -1002, msg: ret_msg[1] }};
+    if(!ret_msg || ret_msg.length<2) throw new YunError('未知错误！');
+    throw new YunError(ret_msg[1]);
 }

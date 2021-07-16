@@ -3,6 +3,7 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 const express = require('express');
+const { YunError } = require('./error');
 
 async function preload() {
     // 加载模型缓存
@@ -65,8 +66,16 @@ function initExpress(app) {
     app.use(function (err, req, res, next) {
         console.log('These errors happened during processing: ', err);
         
+        if(err instanceof YunError) {
+            let temp = { code: err.code, msg: err.message };
+            if(err.data) temp.data = err.data;
+            res.send(temp);
+            return;
+        }
+
         if(typeof res.status == 'function') res.status(500);
         else if(typeof res.setStatusCode == 'function') res.setStatusCode(500);
+        
         res.send({ code: 500, msg: '500 internal server error' })
     });
 }

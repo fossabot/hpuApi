@@ -1,17 +1,15 @@
+const verifier = require('../../utils/verifier');
 const {lib_request} = require('../request');
 
 // 座位布局
-// date: 2021-03-20
-// req.token req.body.room_id req.body.date
+// eg.date: 2021-03-20
 module.exports = async function(req) {
-    if(!req || !req['token'] || !req['body'] || !req['body']['room_id'] || !req['body']['date']) return { body: { code: -1003, msg: '参数不完整' }};
+    verifier(req, {t:'header', v:'token'}, {t:'body', v:'room_id', c:'num'}, {t:'body', v:'date'});
 
     ret = await lib_request({
         method: 'GET',
         uri: `/rest/v2/room/layoutByDate/${req['body']['room_id']}/${req['body']['date']}`,
     }, req['token']);
-
-    if(ret.data.status!=='success') return { body: { code: -1002, msg: ret.data.message }};
     
     let temp = {};
     temp['rows'] = [];

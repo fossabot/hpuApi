@@ -2,6 +2,7 @@ const axios = require('axios');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const CONFIG = require('../config')
 const generateSig = require('../utils/ybk_signature')
+const { YunError } = require('../utils/error')
 
 axiosCookieJarSupport(axios);
 
@@ -60,9 +61,14 @@ function lib_request(axios_setting, token) {
 
     if(token) axios_setting['headers']['token'] = token;
     
-    return axios({
-        maxRedirects: 0,
-        ...axios_setting
+    return new Promise(async (resolve, reject)=>{
+        let ret = await axios({
+            maxRedirects: 0,
+            ...axios_setting
+        });
+
+        if(ret.data.status!=='success') reject(new YunError(ret.data.message));
+        resolve(ret);
     });
 }
 

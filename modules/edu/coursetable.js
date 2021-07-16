@@ -1,10 +1,12 @@
-const {edu_request} = require('../request');
-const cheerio = require('cheerio');
-const cheerioTableparser = require('cheerio-tableparser');
+const verifier = require('../../utils/verifier')
+const {edu_request} = require('../request')
+const cheerio = require('cheerio')
+const cheerioTableparser = require('cheerio-tableparser')
+const { NotLoggedInError, YunError } = require('../../utils/error')
 
 // req.token req.body.semester_id?
 module.exports = async function(req) {
-    if(!req || !req['token']) return { body: { code: -1003, msg: '参数不完整' }};
+    verifier(req, {t:'header', v:'token'});
     
     let ret;
     try {
@@ -13,8 +15,8 @@ module.exports = async function(req) {
             uri: '/courseTableForStd.action',
         }, req.token);
     } catch (error) {
-        if(error.response && error.response.status===302) return { body: { code: -1001, msg: '你没有登录或登录态已过期' }};
-        return { body: { code: -1002, msg: error.message }}
+        if(error.response && error.response.status===302) throw new NotLoggedInError();
+        throw new YunError(error.message);
     }
 
     let semester_id = /semesterCalendar\({empty:"false",onChange:"",value:"(\d+)"}/.exec(ret.data);
@@ -22,7 +24,7 @@ module.exports = async function(req) {
     let std_ids = re_ids.exec(ret.data);
     let class_ids = re_ids.exec(ret.data);
 
-    if(!semester_id || !std_ids || !class_ids) return { body: { code: -1001, msg: '未知错误, 可能未登录？' }}
+    if(!semester_id || !std_ids || !class_ids) throw new YunError('未知错误, 可能未登录？');
     semester_id = semester_id[1], std_ids=std_ids[1], class_ids=class_ids[1];
 
     if(req['body']['semester_id']) semester_id = parseInt(req['body']['semester_id']);
@@ -33,8 +35,8 @@ module.exports = async function(req) {
             headers: {'Cookie': `semester.id=${semester_id}`}
         }, req.token);
     } catch (error) {
-        if(error.response && error.response.status===302) return { body: { code: -1001, msg: '你没有登录或登录态已过期' }};
-        return { body: { code: -1002, msg: error.message }}
+        if(error.response && error.response.status===302) throw new NotLoggedInError();
+        throw new YunError(error.message);
     }
 
     let coursetable = {};

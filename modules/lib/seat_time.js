@@ -1,9 +1,10 @@
+const verifier = require('../../utils/verifier');
 const {lib_request} = require('../request');
 
 // 座位可选时间
 // req.token req.body.date req.body.id req.body.start? 
 module.exports = async function(req) {
-    if(!req || !req['token'] || !req['body'] || !req['body']['date'] || !req['body']['id']) return { body: { code: -1003, msg: '参数不完整' }};
+    verifier(req, {t:'header', v:'token'}, {t:'body', v:'date'}, {t:'body', v:'id', c:'num'});
 
     if(req['body']['start']) {
         ret = await lib_request({
@@ -17,6 +18,5 @@ module.exports = async function(req) {
         }, req['token']);    
     }
 
-    if(ret.data.status==='success') return { body: { code: 0, ...ret.data.data }}
-    return { body: { code: -1002, msg: ret.data.message }}
+    return { body: { code: 0, ...ret.data.data }}
 }

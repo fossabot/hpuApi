@@ -1,5 +1,6 @@
 const cv = require('opencv4nodejs-prebuilt');
-const {uia_request} = require('../request')
+const { YunError } = require('../../utils/error');
+const { uia_request } = require('../request')
 
 function templateMatch(numImg) {
     // bmp files
@@ -17,37 +18,35 @@ function templateMatch(numImg) {
         'AAABAPwAAAIAAAAAAAEBAv///QACAAAAAAABAAD8/wAAAAAAAAAAAAH//AMBAAAAAAIAAQIA//0AAAAAAAADAPv//P8EAAAAAAP7///////9AAAAAAD//wAAAv3/AAIAAP/7AAAAAQD//wAAAP//AAMAAQH9/wAAAP78AAAAAAP//wAAAAD//AACAAD9/wAAAAD////+///+/QQAAAMAA/z////+AAAAAAADAAAEAAACAAIAAA=='
     ];
 
-    let result = [], max = {v: -1, i: 0};
+    let result = [], max = { v: -1, i: 0 };
     for (const template of templateImg) {
-        const mat = cv.imdecode(new Buffer.from(common+template, 'base64'), cv.IMREAD_GRAYSCALE);
+        const mat = cv.imdecode(new Buffer.from(common + template, 'base64'), cv.IMREAD_GRAYSCALE);
         result.push(numImg.matchTemplate(mat, cv.TM_CCOEFF_NORMED).minMaxLoc()['minVal']);
     }
     for (let i = 0; i < result.length; i++) {
-        if(result[i]>max.v) {
+        if (result[i] > max.v) {
             max.v = result[i];
             max.i = i;
         }
     }
-    
+
     return max.i;
 }
 
-module.exports = async function(req) {
-    if(!req) req={};
-
+module.exports = async function (req) {
     ret = await uia_request({
         method: 'GET',
         uri: '/sso/apis/v2/open/captcha'
     });
-    
-    if(!ret.data.img) return { body: { code: -1002, msg: '未知错误' }};
+
+    if (!ret.data.img) throw new YunError('未知错误');
     const mat = cv.imdecode(new Buffer.from(ret.data.img, 'base64'), cv.IMREAD_COLOR).cvtColor(cv.COLOR_BGR2GRAY).threshold(230, 255, cv.THRESH_BINARY_INV);
-    
+
     return {
         body: {
             code: 0,
             ...ret.data,
-            captcha: templateMatch(mat.getRegion(new cv.Rect(23,5,10,15)))+templateMatch(mat.getRegion(new cv.Rect(43,5,10,15))),
+            captcha: templateMatch(mat.getRegion(new cv.Rect(23, 5, 10, 15))) + templateMatch(mat.getRegion(new cv.Rect(43, 5, 10, 15))),
         }
     }
 }

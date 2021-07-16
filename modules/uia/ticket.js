@@ -1,11 +1,12 @@
+const verifier = require('../../utils/verifier');
 const {uia_request} = require('../request');
 const tough = require('tough-cookie');
-const CONFIG = require('../../config')
+const CONFIG = require('../../config');
+const { NotLoggedInError, YunError } = require('../../utils/error');
 
 // serviceEg: 'http://seatlib.hpu.edu.cn/cas' 'https://webvpn.hpu.edu.cn/Cas/login.html'
-// req.token req.body.service
 module.exports = async function(req) {
-    if(!req || !req['token'] || !req['body'] || !req['body']['service']) return { body: { code: -1003, msg: '参数不完整' }};
+    verifier(req, {t:'header', v:'token'}, {t:'body', v:'service'});
 
     let now_url;
     let cookieJar = new tough.CookieJar();
@@ -39,12 +40,12 @@ module.exports = async function(req) {
                 continue;
             }
             console.log(err);
-            return {body: { code: -1002, msg: err.message }};
+            throw new YunError(err.message);
         }
         break;
     }
     const errmsg = /errormes.*value="(.*)"/.exec(ret.data);
-    if(errmsg && errmsg[1]==='') return {body: { code: -1001, msg: '未登录' }};
-    if(errmsg) return {body: { code: -1002, msg: errmsg[1] }};
-    return {body: { code: -1002, msg: '暂不支持此服务登录' }};
+    if(errmsg && errmsg[1]==='') throw new NotLoggedInError();
+    if(errmsg) throw new YunError(errmsg[1]);
+    throw new YunError('暂不支持此服务登录');
 }

@@ -1,9 +1,11 @@
+const verifier = require('../../utils/verifier');
 const {ybk_request} = require('../request');
 const qs = require('qs');
+const { YunError } = require('../../utils/error');
 
 // req.body.username req.body.password
 module.exports = async function(req) {
-    if(!req || !req['body'] || !req['body']['username'] || !req['body']['password']) return { body: { code: -1003, msg: '参数不完整' }};
+    verifier(req, {t:'body', v:'username'}, {t:'body', v:'password'});
 
     ret = await ybk_request({
         uri: '/passport/login',
@@ -13,7 +15,7 @@ module.exports = async function(req) {
         'system_version': '10.0.0', 'user_pwd': req['body']['password']},
     });
 
-    if(ret.data.result_code!==0) return { body: { code: -1002, msg: ret.data.result_msg }};
+    if(ret.data.result_code!==0) throw new YunError(ret.data.result_msg);
 
     return { body: { code: 0, ...ret.data, token: qs.stringify({uid: ret.data.user.user_id, secretID: ret.data.user.access_id, secret: ret.data.user.access_secret, lastTime: ret.data.user.last_sec_update_ts_s}) }}
 }

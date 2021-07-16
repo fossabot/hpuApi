@@ -1,12 +1,13 @@
 const axios = require('axios');
+const { PropertyRequiredError, BadRequestError } = require('../../utils/error');
 
 // req.query.url || req.body.url
 module.exports = async function(req) {
-    if(!req || !((req.query && req.query.url) || (req.body && req.body.url))) return { body: { code: -1003, msg: '参数不完整' }};
+    if(!req.query.url && !req.body.url) throw new PropertyRequiredError('url');
 
     let url = (req.query && req.query.url)? req.query.url: req.body.url;
 
-    if(!url.startsWith('http')) return { body: {code: -1002, msg: '非法的地址'} };
+    if(!url.startsWith('http')) throw new BadRequestError('非法的地址');
     try {
         ret = await axios({
             url,
@@ -17,7 +18,7 @@ module.exports = async function(req) {
         });
         throw new Error('不支持的地址解析');
     } catch (error) {
-        if(!error.response) return { body: {code: -1002, msg: error.message} };
+        if(!error.response) throw new YunError(error.message);
         return { body: {code: 0, url: error.response.headers.location} };
     }
 }

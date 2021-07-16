@@ -1,20 +1,21 @@
-const {edu_request} = require('../request');
-const cheerio = require('cheerio');
-const cheerioTableparser = require('cheerio-tableparser');
+const verifier = require('../../utils/verifier')
+const {edu_request} = require('../request')
+const cheerio = require('cheerio')
+const { NotLoggedInError, YunError } = require('../../utils/error')
 
 // req.token req.body.semester_id 
 module.exports = async function(req) {
-    if(!req || !req['token'] || !req['body'] || !req['body']['semester_id']) return { body: { code: -1003, msg: '参数不完整' }};
-    let ret;
+    verifier(req, {t:'header', v:'token'}, {t:'body', v:'semester_id', c:'num'});
 
+    let ret;
     try {
         ret = await edu_request({
             method: 'GET',
             uri: '/teach/grade/course/person.action',
         }, req.token);
     } catch (error) {
-        if(error.response && error.response.status===302) return { body: { code: -1001, msg: '你没有登录或登录态已过期' }};
-        return { body: { code: -1002, msg: error.message }}
+        if(error.response && error.response.status===302) throw new NotLoggedInError();
+        throw new YunError(error.message);
     }
 
     ret = await edu_request({
@@ -26,17 +27,9 @@ module.exports = async function(req) {
     const $ = cheerio.load(ret.data);
     $('.grid thead').remove();
     
-    if($('div[align="center"]').length) {
-        return {
-            body: {
-                code: -1002,
-                msg: $('div[align="center"]').text().replace(/	/g, ' ').replace(/ +/g, ' ').trim()
-            },
-        }
-    }
+    if($('div[align="center"]').length) throw new YunError($('div[align="center"]').text().replace(/	/g, ' ').replace(/ +/g, ' ').trim());
 
     let sum_grade_point = 0;
-    let sum_score = 0;
     const exams = [];
     $('.grid tr').each(function(){
         const tds = $(this).find('td');
@@ -53,7 +46,6 @@ module.exports = async function(req) {
             grade_point: tds.eq(9).text().trim(),
         }
         sum_grade_point += parseFloat(exam.grade_point);
-        sum_score += parseInt(exam.final_score);
         exams.push(exam);
         // console.log($(this).text().replace(/	/g, ' ').replace(/ +/g, ' ').replace(/\n/g, '').trim());
     });
@@ -64,7 +56,6 @@ module.exports = async function(req) {
             exams: exams,
             sum_grade_point: sum_grade_point.toFixed(1),
             avr_grade_point: (sum_grade_point/exams.length).toFixed(2),
-            sum_score: sum_score,
         },
     }
 }

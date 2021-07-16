@@ -1,13 +1,15 @@
+const verifier = require('../../utils/verifier');
 const {uia_request} = require('../request');
 const qs = require('qs');
 const tough = require('tough-cookie');
 const uia_captcha = require('./captcha');
-const CONFIG = require('../../config')
+const CONFIG = require('../../config');
+const { YunError } = require('../../utils/error');
 
 // serviceEg: 'http://seatlib.hpu.edu.cn/cas' 'https://webvpn.hpu.edu.cn/Cas/login.html'
 // req.body.username req.body.password req.body.service req.body.captcha_token? req.body.captcha?
 module.exports = async function(req) {
-    if(!req || !req['body'] || !req['body']['username'] || !req['body']['password'] || !req['body']['service']) return { body: { code: -1003, msg: '参数不完整' }};
+    verifier(req, {t:'body', v:'username'}, {t:'body', v:'password'}, {t:'body', v:'service'});
 
     let token, captcha;
     if(!req.body.captcha_token || !req.body.captcha) {
@@ -31,7 +33,7 @@ module.exports = async function(req) {
     });
 
     const lt = /name="lt".*value="(.*)"/.exec(ret.data), execution = /name="execution".*value="(.*)"/.exec(ret.data);
-    if(!lt || !execution) return {body: { code: -1002, msg: '未知错误' }};
+    if(!lt || !execution) throw new YunError('未知错误');
 
     const post_data = {
         'username': req['body']['username'],
@@ -75,11 +77,11 @@ module.exports = async function(req) {
                 continue;
             }
             console.log(err);
-            return {body: { code: -1002, msg: err.message }};
+            throw new YunError(err.message);
         }
         break;
     }
     const errmsg = /errormes.*value="(.*)"/.exec(ret.data);
-    if(errmsg) return {body: { code: -1002, msg: errmsg[1] }};
-    return {body: { code: -1002, msg: '暂不支持此服务登录' }};
+    if(errmsg) throw new YunError(errmsg[1]);
+    throw new YunError('暂不支持此服务登录');
 }

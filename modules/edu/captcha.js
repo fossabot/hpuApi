@@ -4,6 +4,7 @@ const cv = require('opencv4nodejs-prebuilt')
 const tf = require('@tensorflow/tfjs-node')
 const fs = require('fs')
 const path = require('path')
+const { AlreadyLoggedInError, YunError } = require('../../utils/error')
 
 const captcha_len = 4;
 const char_set = '0123456789';
@@ -33,7 +34,6 @@ async function recoCaptcha(img) {
 
 // req.token?
 module.exports = async function(req) {
-    if(!req) req={};
 
     let ret;
     try {
@@ -42,15 +42,15 @@ module.exports = async function(req) {
             uri: '/loginExt.action'
         }, req.token);
     } catch (error) {
-        if(error.response && error.response.status===302) return { body: { code: -2000, msg: '您已经登录' }};
-        return { body: { code: -1002, msg: error.message }}
+        if(error.response && error.response.status===302) throw new AlreadyLoggedInError();
+        throw new YunError(error.message);
     }
 
     const aesKey = (/encrypt\(username,'([0-9a-z]*)'\)/).exec(ret.data);
     const shaKey = (/CryptoJS\.SHA1\('([0-9a-z\-]*)'/).exec(ret.data);
     let token = /JSESSIONID=([0-9a-zA-Z]*);/.exec(ret.headers['set-cookie']);
 
-    if((!token && !req.token) || !shaKey || !aesKey) return { body: { code: -1002, msg: '未知错误, 可能服务器满载, 请稍候再试' }};
+    if((!token && !req.token) || !shaKey || !aesKey) throw new YunError('未知错误, 可能服务器满载, 请稍候再试');
     
     if(!token) token = [0, req.token];
     ret = await edu_request({
